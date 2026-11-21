@@ -1,0 +1,24 @@
+.venv/
+.env
+data/
+logs/
+__pycache__/
+reports/
+.venv-laya/
+.venv-treino/
+arquivo/
+.venv-modelo/
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.kotlin/
+android/modelos/build/
+android/cerebro/build/
+
+# Os modelos copiados para o pacote de recursos da loja (android/modelos_pack/build.gradle.kts)
+android/modelos_pack/src/main/assets/
+
+# Gravações e telas do celular de desenvolvimento: dados reais, nunca publicados
+tests/gravacoes/
+tests/telas/

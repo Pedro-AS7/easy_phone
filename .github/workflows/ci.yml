@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    name: Python (testes de unidade e simulador)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Testes
+        run: python -m unittest discover -s tests
+
+  android:
+    name: Android (testes e APK da loja)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: SDK (plataforma 36)
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" > /dev/null
+      - uses: gradle/actions/setup-gradle@v5
+      - name: Testes e APK de depuração da loja
+        run: ./gradlew :cerebro:test :modelos:test :app:testLojaDebugUnitTest :app:testCompletoDebugUnitTest :app:assembleLojaDebug
+      - uses: actions/upload-artifact@v7
+        with:
+          name: easy-phone-loja-debug
+          path: android/app/build/outputs/apk/loja/debug/*.apk
+          retention-days: 30

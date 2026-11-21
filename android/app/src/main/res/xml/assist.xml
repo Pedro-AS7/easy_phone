@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- O lm_phone como assistente digital (AssistService): o painel é o AssistSession. -->
+<voice-interaction-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:sessionService="dev.pedro.lmphone.AssistSessionService"
+    android:recognitionService="dev.pedro.lmphone.AssistRecognition"
+    android:settingsActivity="dev.pedro.lmphone.MainActivity"
+    android:supportsAssist="true"
+    android:supportsLaunchVoiceAssistFromKeyguard="false" />

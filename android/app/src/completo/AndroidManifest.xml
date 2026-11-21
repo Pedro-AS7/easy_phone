@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- O que só a variante `completo` tem (docs/plano-play-store.md): o agente que age, o PC pelo adb, a palavra de ativação
+     e os serviços de depuração. A variante `loja` não compila nada disto. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Chamar pela voz ("Alexa", Wake.kt): o microfone aberto num serviço em primeiro plano. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <!-- Ver os outros apps instalados: o nome deles na tela ("YouTube Music") e, depois, abrir um app pelo nome. -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+    <!-- O cérebro no celular (etapa 3 de docs/plano-app-android.md): ligar e desligar a própria acessibilidade e o teclado
+         do agente (dada uma vez pelo adb, como o adb faz no PC), o cofre pelos contatos, o nome da rede Wi-Fi (o Android
+         só o mostra com a localização), o app em primeiro plano antes de ligar (apps de banco; dada pelo adb). -->
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+
+    <application android:networkSecurityConfig="@xml/network">
+        <!-- A palavra de ativação (Wake.kt): ouve "Alexa" e abre o painel do assistente. -->
+        <service
+            android:name=".WakeService"
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
+        <!-- A conferência da palavra de ativação pelo adb (tools/app/escuta.py testar): só o shell tem a permissão DUMP. -->
+        <receiver
+            android:name=".WakeTest"
+            android:exported="true"
+            android:permission="android.permission.DUMP" />
+
+        <!-- Os modelos pequenos em modo de depuração (ModelService). Exportado só para o adb: a permissão DUMP é do
+             shell, e nenhum app comum a recebe. -->
+        <service
+            android:name=".ModelService"
+            android:exported="true"
+            android:permission="android.permission.DUMP"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Conferencia dos modelos de IA locais do app, ligada pelo desenvolvedor" />
+        </service>
+
+        <!-- O cérebro do celular atendendo a suíte do PC (BrainService); como o ModelService, só o adb o liga. -->
+        <service
+            android:name=".BrainService"
+            android:exported="true"
+            android:permission="android.permission.DUMP"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Suite de testes do assistente, ligada pelo desenvolvedor" />
+        </service>
+
+        <!-- O teclado do agente (Keyboard): ativo só durante a tarefa. -->
+        <service
+            android:name=".Keyboard"
+            android:exported="true"
+            android:label="lm_phone (teclado do agente)"
+            android:permission="android.permission.BIND_INPUT_METHOD">
+            <intent-filter>
+                <action android:name="android.view.InputMethod" />
+            </intent-filter>
+            <meta-data
+                android:name="android.view.im"
+                android:resource="@xml/keyboard" />
+        </service>
+    </application>
+</manifest>

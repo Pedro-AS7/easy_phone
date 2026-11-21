@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">lm_phone</string>
+    <string name="accessibility_service">lm_phone (agente)</string>
+    <string name="accessibility_description">Lê a tela e toca por você durante uma tarefa do lm_phone. Fica ligado só enquanto a tarefa roda.</string>
+    <string name="fgs_uso">O agente opera o celular a pedido do usuario durante uma tarefa</string>
+    <string name="aviso_tarefa">O agente está usando o celular</string>
+</resources>

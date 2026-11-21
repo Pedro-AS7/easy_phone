@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A variante `loja` (docs/plano-play-store.md): só ensina. Sem a permissão de ver todos os apps, a lista vem do lançador
+     (<queries>), que é o que o assistente abre pelo nome. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+</manifest>
